@@ -4,14 +4,14 @@ CREncrypt is a simple and lightweight file encryption command line tool with the
 ## How To Use
 
 From -help flag:
-`Usage: crencrypt <-(encrypt/e)/(decrypt/d)> [-(n/nopreserve)/(p/preserve)] <key>  <infile> [out]`
-`-encrypt -e: encrypt mode`
-`-decrypt -d: decrypt mode`
-`-preserve -p (OPTIONAL): preserve the infile`
-`-nopreserve -n (OPTIONAL): safe delete the infile`
-`key: the characters used to encrypt`
-`infile: the input file`
-`outfile (OPTIONAL): the output file`
+- `Usage: crencrypt <-(encrypt/e)/(decrypt/d)> [-(n/nopreserve)/(p/preserve)] <key>  <infile> [out]`  
+- `-encrypt -e: encrypt mode`  
+- `-decrypt -d: decrypt mode`  
+- `-preserve -p (OPTIONAL): preserve the infile`  
+- `-nopreserve -n (OPTIONAL): safe delete the infile`  
+- `key: the characters used to encrypt`
+- `infile: the input file`
+- `outfile (OPTIONAL): the output file`
 
 Breakdown:
 
@@ -19,5 +19,8 @@ Breakdown:
 - The -preserve and -nopreserve are used to indicate whether the input file should be kept. If nopreserve is selected, it will be wiped from disc. Default is preserve but optional.
 - The key parameter is the password to the file
 - Infile and outfile are self explanatory. Outfile is optional however, and will default to [infile].enc or [infile].dec depending on mode, if not provided.
+
+## Installation
+Prebuilt executables are available for both Linux and Windows, alternatively, users can clone the repository and build their own executable with the Makefile provided.
 
 
