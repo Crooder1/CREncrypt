@@ -14,6 +14,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <stdint.h>
+
+#include "pcg32_random.h"
 
 typedef struct {
     char* data;

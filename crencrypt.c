@@ -87,7 +87,7 @@ void encryptFile(CRKey* key, char* inputFp, char* outputFp) {
     int seed = getKeySeed(key);
     int nonce = getNonce();
     fwrite(&nonce, sizeof(int), sizeof(int), ofp);
-    srand(seed + nonce);
+    pcg32_seed(seed + nonce, nonce);
 
     char buffer[128];
 
@@ -131,7 +131,7 @@ void decryptFile(CRKey* key, char* inputFp, char* outputFp) {
     int seed = getKeySeed(key);
     int nonce;
     fread(&nonce, sizeof(int), sizeof(int), ifp);
-    srand(seed + nonce);
+    pcg32_seed(seed + nonce, nonce);
 
     int buffer[128];
 
@@ -206,7 +206,7 @@ int encryptText(CRKey* key, char* text, int textSize, int** cipher) {
 
         for (int j = 0; j < key->length; j++) {
 
-            r += rand() % key->data[j];
+            r += pcg32_random() % key->data[j];
 
         }
 
@@ -228,7 +228,7 @@ int decryptText(CRKey* key, int* data, int dataSize, char** text) {
 
         for (int j = 0; j < key->length; j++) {
 
-            r -= rand() % key->data[j];
+            r -= pcg32_random() % key->data[j];
             
         }
 
