@@ -20,13 +20,13 @@ int main(int argc, char *argv[]) {
     }
 
     //flags
-    char mode = 0b10;
-    char preserve = 0b10;
+    int8_t mode = 0b10;
+    int8_t preserve = 0b10;
     CRKey key;
     char* infile = NULL;
     char* outfile = NULL;
 
-    int x;
+    uint32_t x;
 
     for (x = 1; x < argc; x++) {
         
@@ -89,7 +89,7 @@ int main(int argc, char *argv[]) {
 
     if (argc <= x) {
 
-        int otfSize = strlen(infile) + 4 + 1;
+        uint32_t otfSize = strlen(infile) + 4 + 1;
         outfile = calloc(sizeof(char), otfSize);
 
         printf("Outfile not provided. Using Default...\n");
