@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
         exit(0);
     }
 
-    if (argc < 4) {
+    if (argc < 3) {
         printf("Too little arguments. Use -help.");
         exit(0);
     }
@@ -39,7 +39,6 @@ int main(int argc, char *argv[]) {
         // End of flags
         if (argv[x][0] != '-') break;
 
-
         if (argv[x][1] == 'e') {
             checkDuplicate(mode, argv[x]);
             mode = 0;
@@ -54,30 +53,13 @@ int main(int argc, char *argv[]) {
             preserve = 1;
         }
 
-        /*if (strcmp(argv[x], "-e") == 0 || strcmp(argv[x], "-encrypt")) {
-            checkDuplicate(mode, argv[x]);
-            mode = 0;
-        } else if (strcmp(argv[x], "-d") == 0) {
-            checkDuplicate(mode, argv[x]);
-            mode = 1;
-        } else if (strcmp(argv[x], "-p") == 0) {
-            checkDuplicate(preserve, argv[x]);
-            preserve = 0;
-        } else if (strcmp(argv[x], "-n") == 0) {
-            checkDuplicate(preserve, argv[x]);
-            preserve = 1;
-        } else {
-            break;
-        }*/
-
     }
 
-    if (argc <= x) {
-        printf("Missing key. Use -help.");
-        exit(0);
-    }
+    char key_data[128];
+    printf("File Key: ");
+    fgets(key_data, sizeof(key_data), stdin);
 
-    key.data = argv[x++];
+    key.data = key_data;
     key.length = strlen(key.data);
 
     if (argc <= x) {
