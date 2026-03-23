@@ -9,20 +9,20 @@ void checkDuplicate(int value, char* arg) {
 
 }
 
-unsigned int getKeySeed(CRKey* key) {
+uint32_t getKeySeed(CRKey* key) {
 
-    unsigned int seed = 0;
+    uint32_t seed = 0;
 
-    for (int x = 0; x < key->length; x++) {
+    for (uint32_t x = 0; x < key->length; x++) {
         seed = seed * 31 + key->data[x];
     }
 
     return seed;
 }
 
-unsigned int getNonce() {
+uint32_t getNonce() {
     
-    unsigned char buffer[4];
+    int8_t buffer[4];
 
 #if defined(__linux__)
 
@@ -53,12 +53,12 @@ unsigned int getNonce() {
     exit(0);
 #endif
 
-    unsigned int nonce = 0;
+    uint32_t nonce = 0;
 
-    for (int i = 0; i < 4; i++) {
+    for (uint8_t i = 0; i < 4; i++) {
 
         nonce = nonce << 8;
-        nonce += (int) buffer[i];
+        nonce += (uint32_t) buffer[i];
 
     }
 
@@ -84,22 +84,22 @@ void encryptFile(CRKey* key, char* inputFp, char* outputFp) {
     }
 
     // Set seed and write nonce
-    int seed = getKeySeed(key);
-    int nonce = getNonce();
-    fwrite(&nonce, sizeof(int), sizeof(int), ofp);
-    srand(seed + nonce);
+    uint32_t seed = getKeySeed(key);
+    uint32_t nonce = getNonce();
+    fwrite(&nonce, sizeof(uint32_t), sizeof(uint32_t), ofp);
+    pcg32_seed(seed + nonce, nonce);
 
     char buffer[128];
 
-    int read;
-    int size;
+    uint32_t read;
+    uint32_t size;
 
     while ((read = fread(buffer, sizeof(char), 128, ifp)) != 0) {
 
-        int* result;
+        uint32_t* result;
         size = encryptText(key, buffer, read, &result);
 
-        fwrite(result, sizeof(int), size, ofp);
+        fwrite(result, sizeof(uint32_t), size, ofp);
 
         free(result);
 
@@ -128,17 +128,17 @@ void decryptFile(CRKey* key, char* inputFp, char* outputFp) {
         exit(0);
     }
 
-    int seed = getKeySeed(key);
-    int nonce;
-    fread(&nonce, sizeof(int), sizeof(int), ifp);
-    srand(seed + nonce);
+    uint32_t seed = getKeySeed(key);
+    uint32_t nonce;
+    fread(&nonce, sizeof(uint32_t), sizeof(uint32_t), ifp);
+    pcg32_seed(seed + nonce, nonce);
 
-    int buffer[128];
+    uint32_t buffer[128];
 
-    int read;
-    int size;
+    uint32_t read;
+    uint32_t size;
 
-    while ((read = fread(buffer, sizeof(int), 128, ifp)) != 0) {
+    while ((read = fread(buffer, sizeof(uint32_t), 128, ifp)) != 0) {
 
         char* result;
         size = decryptText(key, buffer, read, &result);
@@ -177,7 +177,7 @@ void wipeFile(char* fn) {
 
     while (fileSize - written > 0) {
 
-        int toWrite = fileSize - written > 4096 ? 4096 : fileSize - written;
+        uint32_t toWrite = fileSize - written > 4096 ? 4096 : fileSize - written;
 
         if (fwrite(buffer, 1, toWrite, file) != toWrite) {
             printf("File writing failed.");
@@ -196,17 +196,17 @@ void wipeFile(char* fn) {
 
 }
 
-int encryptText(CRKey* key, char* text, int textSize, int** cipher) {
+uint32_t encryptText(CRKey* key, char* text, uint32_t textSize, uint32_t** cipher) {
 
-    int* result = malloc((textSize) * sizeof(int));
+    uint32_t* result = malloc((textSize) * sizeof(uint32_t));
 
-    for (int i = 0; i < textSize; i++) {
+    for (uint32_t i = 0; i < textSize; i++) {
 
-        int r = (int) text[i];
+        uint32_t r = (uint32_t) text[i];
 
-        for (int j = 0; j < key->length; j++) {
+        for (uint32_t j = 0; j < key->length; j++) {
 
-            r += rand() % key->data[j];
+            r += pcg32_random() % key->data[j];
 
         }
 
@@ -218,17 +218,17 @@ int encryptText(CRKey* key, char* text, int textSize, int** cipher) {
     return textSize;
 }
 
-int decryptText(CRKey* key, int* data, int dataSize, char** text) {
+uint32_t decryptText(CRKey* key, uint32_t* data, uint32_t dataSize, char** text) {
 
     char* result = malloc((dataSize) * sizeof(char));
 
-    for (int i = 0; i < dataSize; i++) {
+    for (uint32_t i = 0; i < dataSize; i++) {
 
-        int r = data[i];
+        uint32_t r = data[i];
 
-        for (int j = 0; j < key->length; j++) {
+        for (uint32_t j = 0; j < key->length; j++) {
 
-            r -= rand() % key->data[j];
+            r -= pcg32_random() % key->data[j];
             
         }
 

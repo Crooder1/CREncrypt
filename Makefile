@@ -9,10 +9,10 @@ UNIX_TARGET = crencrypt
 all: unix windows
 
 unix: main.c crencrypt.c
-	$(UNIX_CC) $(CFLAGS) -o $(UNIX_TARGET) main.c crencrypt.c
+	$(UNIX_CC) $(CFLAGS) -o $(UNIX_TARGET) main.c crencrypt.c pcg32_random.c
 
 windows: main.c crencrypt.c
-	$(WINDOWS_CC) $(CFLAGS) -o $(WINDOWS_TARGET) main.c crencrypt.c
+	$(WINDOWS_CC) $(CFLAGS) -o $(WINDOWS_TARGET) main.c crencrypt.c pcg32_random.c
 
 clean:
 	rm -f crencrypt crencrypt.exe main.o crencrypt.o

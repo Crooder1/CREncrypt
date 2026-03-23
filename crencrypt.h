@@ -14,22 +14,25 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <stdint.h>
+
+#include "pcg32_random.h"
 
 typedef struct {
     char* data;
-    int length;
+    uint32_t length;
 } CRKey;
 
 void checkDuplicate(int value, char* key);
 
-unsigned int getKeySeed(CRKey* key);
-unsigned int getNonce();
+uint32_t getKeySeed(CRKey* key);
+uint32_t getNonce();
 
 void encryptFile(CRKey* key, char* inputFp, char* outputFp);
 void decryptFile(CRKey* key, char* inputFp, char* outputFp);
 void wipeFile(char* file);
 
-int encryptText(CRKey* key, char* text, int textSize, int** cipher);
-int decryptText(CRKey* key, int* data, int dataSize, char** text);
+uint32_t encryptText(CRKey* key, char* text, uint32_t textSize, uint32_t** cipher);
+uint32_t decryptText(CRKey* key, uint32_t* data, uint32_t dataSize, char** text);
 
 #endif
